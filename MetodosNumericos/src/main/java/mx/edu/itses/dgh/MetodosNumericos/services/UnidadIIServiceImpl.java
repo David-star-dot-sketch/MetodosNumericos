@@ -3,12 +3,14 @@ package mx.edu.itses.dgh.MetodosNumericos.services;
 import java.util.ArrayList;
 import lombok.extern.slf4j.Slf4j;
 import mx.edu.itses.dgh.MetodosNumericos.domain.Biseccion;
+import mx.edu.itses.dgh.MetodosNumericos.domain.PuntoFijo;
 import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
 public class UnidadIIServiceImpl implements UnidadIIService {
 
+    @Override
     public ArrayList<Biseccion> AlgoritmoBiseccion(Biseccion biseccion){
         ArrayList<Biseccion> respuesta = new ArrayList<>();
         double XL, XU, XRa, XRn, FXL, FXU, FXR, Ea;
@@ -17,7 +19,7 @@ public class UnidadIIServiceImpl implements UnidadIIService {
         XU = biseccion.getXu();
         XRa = 0;
         Ea = 100;
-        // Verificamos que en el intervalo definido haya un cambio de signo
+
         FXL = Funciones.Ecuacion(biseccion.getFx(), XL);
         FXU = Funciones.Ecuacion(biseccion.getFx(), XU);
         if (FXL * FXU < 0) {
@@ -52,11 +54,44 @@ public class UnidadIIServiceImpl implements UnidadIIService {
             }
         } else {
             Biseccion renglon = new Biseccion();
-           // renglon.setIntervaloInvalido(true);
+            // renglon.setIntervaloInvalido(true);
             respuesta.add(renglon);
         }
 
         return respuesta;
     }
+    @Override
+    public ArrayList<PuntoFijo> AlgoritmoPuntoFijo(PuntoFijo puntoFijo) {
+        ArrayList<PuntoFijo> respuesta = new ArrayList<>();
+        double xi = puntoFijo.getXi();
+        double error = 1;
+        int iteracionesMax = puntoFijo.getIteraciones();
+        double errorDeseado = puntoFijo.getError();
+        int contador = 1;
 
+        while (contador <= iteracionesMax && error > errorDeseado) {
+            double gxi = funcionG(xi);
+            if (contador > 1) {
+                error = Funciones.ErrorRelativo(gxi, xi);
+            }
+
+            PuntoFijo renglon = new PuntoFijo();
+            renglon.setIteracion(contador);
+            renglon.setXi(xi);
+            renglon.setGxi(gxi);
+            renglon.setError(error);
+
+            respuesta.add(renglon);
+
+            xi = gxi;
+            contador++;
+        }
+
+        return respuesta;
+    }
+
+    // G(x) = sin(x) - x^2 + x
+    private double funcionG(double x) {
+        return Math.sin(x) - Math.pow(x, 2) + x;
+    }
 }
