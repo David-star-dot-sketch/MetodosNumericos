@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import lombok.extern.slf4j.Slf4j;
 import mx.edu.itses.dgh.MetodosNumericos.domain.Biseccion;
 import mx.edu.itses.dgh.MetodosNumericos.domain.PuntoFijo;
+import mx.edu.itses.dgh.MetodosNumericos.domain.NewtonRaphson;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Service;
 public class UnidadIIServiceImpl implements UnidadIIService {
 
     @Override
-    public ArrayList<Biseccion> AlgoritmoBiseccion(Biseccion biseccion){
+    public ArrayList<Biseccion> AlgoritmoBiseccion(Biseccion biseccion) {
         ArrayList<Biseccion> respuesta = new ArrayList<>();
         double XL, XU, XRa, XRn, FXL, FXU, FXR, Ea;
 
@@ -31,6 +32,7 @@ public class UnidadIIServiceImpl implements UnidadIIService {
                 if (i != 1) {
                     Ea = Funciones.ErrorRelativo(XRn, XRa);
                 }
+
                 Biseccion renglon = new Biseccion();
                 renglon.setXl(XL);
                 renglon.setXu(XU);
@@ -39,6 +41,7 @@ public class UnidadIIServiceImpl implements UnidadIIService {
                 renglon.setFXu(FXU);
                 renglon.setFXr(FXR);
                 renglon.setEa(Ea);
+
                 if (FXL * FXR < 0) {
                     XU = XRn;
                 } else if (FXL * FXR > 0) {
@@ -46,8 +49,10 @@ public class UnidadIIServiceImpl implements UnidadIIService {
                 } else if (FXL * FXR == 0) {
                     break;
                 }
+
                 XRa = XRn;
                 respuesta.add(renglon);
+
                 if (Ea <= biseccion.getEa()) {
                     break;
                 }
@@ -60,6 +65,7 @@ public class UnidadIIServiceImpl implements UnidadIIService {
 
         return respuesta;
     }
+
     @Override
     public ArrayList<PuntoFijo> AlgoritmoPuntoFijo(PuntoFijo puntoFijo) {
         ArrayList<PuntoFijo> respuesta = new ArrayList<>();
@@ -85,6 +91,44 @@ public class UnidadIIServiceImpl implements UnidadIIService {
 
             xi = gxi;
             contador++;
+        }
+
+        return respuesta;
+    }
+
+    @Override
+    public ArrayList<NewtonRaphson> AlgoritmoNewtonRaphson(NewtonRaphson newtonraphson) {
+        ArrayList<NewtonRaphson> respuesta = new ArrayList<>();
+
+        double Xi = newtonraphson.getXi(); // valor inicial
+        double Xi1 = 0;           // siguiente Xi
+        double Ea = 100;            // error inicial
+        double h = 0.0001; // paso pequeño para aproximar derivada
+
+        int maxIteraciones = newtonraphson.getIteracionesMaximas();
+
+        for (int i = 1; i <= maxIteraciones; i++) {
+            double FXi = Funciones.Ecuacion(newtonraphson.getFX(), Xi);
+            double FdXi = (Funciones.Ecuacion(newtonraphson.getFX(), Xi + h) - FXi) / h;
+
+            if (FdXi == 0) {
+                log.warn("Derivada cercana a cero en iteración {}, deteniendo proceso.", i);
+                break;
+            }
+
+            Xi1 = Xi - (FXi / FdXi);
+            Ea = Funciones.ErrorRelativo(Xi1, Xi);
+
+            NewtonRaphson iteracion = new NewtonRaphson();
+            iteracion.setXi(Xi);
+            iteracion.setFXi(FXi);
+            iteracion.setDFXi(String.valueOf(FdXi));
+            iteracion.setXi1(Xi1);
+            iteracion.setEa(Ea);
+            iteracion.setIteracionesMaximas(i);
+
+            respuesta.add(iteracion);
+            Xi = Xi1;
         }
 
         return respuesta;
