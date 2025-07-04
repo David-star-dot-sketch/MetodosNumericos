@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class PuntoFijo {
-
+private String Gx;
 private int iteracion;
 private double xi;
 private double gxi;
