@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>MÉTODOS NUMÉRICOS</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <!-- Bootstrap CSS -->
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            crossorigin="anonymous"
+            >
+        <!-- Bootstrap JS -->
+        <script 
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            crossorigin="anonymous"
+        ></script>
+
+        <style>
+            p {
+                text-align: justify;
+            }
+        </style>
+    </head>
+    <body>
+        <!-- Menú y banner -->
+        <nav th:replace="/layout/template :: menu"></nav> 
+        <div th:replace="/layout/template :: bannerunit3"></div>
+
+        <div class="container mt-4">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Inicio</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Sistemas Lineales</li>
+                </ol>
+            </nav>
+
+            <!-- Contenido principal -->
+            <div>
+                <h1 class="mb-4 fw-bold">Solución de Sistemas de Ecuaciones Lineales</h1>
+
+                <p>
+                    Gran parte de las ecuaciones esenciales en ingeniería se fundamentan en las leyes de conservación. Entre las magnitudes que obedecen a estas leyes se encuentran la masa, la energía y el momento. Desde el enfoque matemático, dichos principios conducen a ecuaciones de balance o continuidad, las cuales describen el comportamiento de un sistema al relacionar la cantidad estudiada con las influencias o estímulos externos que actúan sobre él.
+                </p>
+
+                <p >
+                    En esta unidad se abordará la técnica esencial para la resolución de sistemas algebraicos lineales. Los métodos expuestos proporcionan una comprensión visual y sirven como fundamento para procedimientos más avanzados, como la eliminación de Gauss.
+                </p>
+            </div>
+
+            <!-- Métodos -->
+            <div class="mt-5">
+                <h3 class="fw-bold">MÉTODOS DIRECTOS</h3>
+                <ul class="list-unstyled">
+                    <li><a href="/unit3/formcramer" class="text-decoration-none">Regla de Cramer</a></li>
+                    <li><a href="/unit3/formgauss" class="text-decoration-none">Eliminación Gaussiana</a></li>
+                    <li><a href="/unit3/formgaussjordan" class="text-decoration-none">Gauss Jordan</a></li>
+                </ul>
+
+                <h3 class="fw-bold mt-4">MÉTODOS ITERATIVOS</h3>
+                <ul class="list-unstyled">
+                    <li><a href="/unit3/formjacobi" class="text-decoration-none">Jacobi</a></li>
+                    <li><a href="/unit3/formgaussseidel" class="text-decoration-none">Gauss Seidel</a></li>
+                </ul>
+            </div>
+        </div>
+    </body>
+</html>
